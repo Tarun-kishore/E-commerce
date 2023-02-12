@@ -30,8 +30,22 @@ function App() {
     onAuthStateChanged(firebase.auth(), (user) => {
       // If the user is authenticated
       if (user) {
+        let idToken;
+        firebase
+          .auth()
+          .currentUser.getIdToken(true)
+          .then((token) => {
+            idToken = token;
+          })
+          .then(() =>
+            setUser({
+              name: user.displayName,
+              email: user.email,
+              uid: user.uid,
+              idToken,
+            })
+          );
         // Set the user data in the state
-        setUser({ name: user.displayName, email: user.email, uid: user.uid });
       } else {
         // If the user is not authenticated, set the user state to null
         setUser();
