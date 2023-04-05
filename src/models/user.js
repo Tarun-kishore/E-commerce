@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const Product = require("./products");
 
 const userSchema = mongoose.Schema(
   {
@@ -33,6 +34,15 @@ const userSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre("remove", async function (next) {
+  try {
+    await Product.deleteMany({ createdBy: this._id });
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 const User = mongoose.model("User", userSchema);
 

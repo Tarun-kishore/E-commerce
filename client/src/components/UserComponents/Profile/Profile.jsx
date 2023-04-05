@@ -1,24 +1,20 @@
 import { useEffect,  useContext } from "react";
-import { UserContext } from "../../../App.js";
+import { UserContext,axiosContext } from "../../../App.js";
 export default function Profile() {
 
   const { user, setUser } = useContext(UserContext);
+  const axios = useContext(axiosContext);
   useEffect(() => {
 
 
-    if(!user.idToken || user.idToken=='') return ;
-    fetch("/user/add", {
-        method:'POST',
-      headers: {
-          'AuthToken': user.idToken,
-      },
-        body:JSON.stringify({})
+    if(!axios || !user.idToken || user.idToken=='') return ;
+    axios.post("/user/add", {
     })
       .catch((err) => {
         console.log(err);
       });
 
-  }, [user]);
+  }, [user,axios]);
   return (
       <>
   <div>This Is Profile</div>

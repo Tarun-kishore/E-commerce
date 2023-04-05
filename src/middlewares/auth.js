@@ -1,3 +1,4 @@
+const User = require("../models/user");
 const admin = require("firebase-admin");
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -20,6 +21,7 @@ async function auth(req, res, next) {
     try {
       const decodedToken = await admin.auth().verifyIdToken(token);
       req.userData = decodedToken;
+      req.user = await User.findOne({ email: req.userData.email });
     } catch (err) {
       console.log(err);
     }
