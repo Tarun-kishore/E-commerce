@@ -52,6 +52,7 @@ export default function MyNavbar() {
                 <NavDropdown.Item as={Link} to="/settings">
                   Settings
                 </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/cart">Cart</NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/myProducts">
                   My Products
                 </NavDropdown.Item>

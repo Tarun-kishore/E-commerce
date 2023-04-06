@@ -16,15 +16,19 @@ import NotFound from "./components/IndexComponents/NotFound/NotFound";
 import Profile from "./components/UserComponents/Profile/Profile";
 import Settings from "./components/UserComponents/Settings/Settings";
 import MyProducts from "./components/UserComponents/myProducts/myProducts";
+import Cart from "./components/Cart/Cart.jsx";
+import { getCart } from "./utils/cart";
 
 // Create the UserContext for sharing data across components
 export const UserContext = createContext(null);
 export const axiosContext = createContext(axios.create());
+export const cartContext = createContext([]);
 
 // The main component of the app
 function App() {
   // The state to store the user data
   const [user, setUser] = useState();
+  const [cart, setCart] = useState(getCart());
   //const axiosInstance = axios.create({
   //headers: {
   //"Content-Type": "application/json",
@@ -84,35 +88,41 @@ function App() {
     <>
       {/* Provide the user data to other components using the UserContext */}
       <UserContext.Provider value={{ user: user, setUser: setUser }}>
-        <axiosContext.Provider value={axiosInstance.current}>
-          {/* Use the React Router for navigation */}
-          <Router>
-            {/* Include the Navbar component */}
-            <MyNavbar />
-            {/* Define the routes of the app */}
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<ContactUs />} />
-              {/* If the user is authenticated, show the Home page. If not, show the Auth page */}
-              <Route path="/signin" element={user ? <Home /> : <Auth />} />
-              {/* If the user is authenticated, show the Profile page. If not, show the Auth page */}
-              <Route path="/profile" element={user ? <Profile /> : <Auth />} />
-              {/* If the user is authenticated, show the Settings page. If not, show the Auth page */}
-              <Route
-                path="/settings"
-                element={user ? <Settings /> : <Auth />}
-              />
-              {/* If the user is authenticated, show the my products page. If not, show the Auth page */}
-              <Route
-                path="/myProducts"
-                element={user ? <MyProducts /> : <Auth />}
-              />
-              {/* If no matching route is found, show the 404 page*/}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Router>
-        </axiosContext.Provider>
+        <cartContext.Provider value={{ cart, setCart }}>
+          <axiosContext.Provider value={axiosInstance.current}>
+            {/* Use the React Router for navigation */}
+            <Router>
+              {/* Include the Navbar component */}
+              <MyNavbar />
+              {/* Define the routes of the app */}
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<ContactUs />} />
+                {/* If the user is authenticated, show the Home page. If not, show the Auth page */}
+                <Route path="/signin" element={user ? <Home /> : <Auth />} />
+                {/* If the user is authenticated, show the Profile page. If not, show the Auth page */}
+                <Route
+                  path="/profile"
+                  element={user ? <Profile /> : <Auth />}
+                />
+                {/* If the user is authenticated, show the Settings page. If not, show the Auth page */}
+                <Route
+                  path="/settings"
+                  element={user ? <Settings /> : <Auth />}
+                />
+                {/* If the user is authenticated, show the my products page. If not, show the Auth page */}
+                <Route
+                  path="/myProducts"
+                  element={user ? <MyProducts /> : <Auth />}
+                />
+                <Route path="/cart" element={user ? <Cart /> : <Auth />} />
+                {/* If no matching route is found, show the 404 page*/}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Router>
+          </axiosContext.Provider>
+        </cartContext.Provider>
       </UserContext.Provider>
     </>
   );

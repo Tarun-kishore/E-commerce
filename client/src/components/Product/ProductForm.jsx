@@ -1,15 +1,16 @@
 import React, { useState,useContext } from "react";
-import { axiosContext } from "../../../App.js";
+import { axiosContext } from "../../App.js";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { Alert } from 'react-bootstrap';
 import ImageResizer from 'react-image-file-resizer';
 
-export default function MyProductsForm() {
+export default function ProductForm(props) {
+
+const { product} = props;
   const axios = useContext(axiosContext);
-    const [isProductFormVisible,setIsProductFormVisible] = useState(false);
-const [formData, setFormData] = useState({});
-     const [imagePreview, setImagePreview] = useState("");
+const [formData, setFormData] = useState({name:product.name,price:product.price,description:product.description});
+     const [imagePreview, setImagePreview] = useState(product.image);
   const [showAlert, setShowAlert] = useState(false);
 const [showAlertForSubmission, setShowAlertForSubmission] = useState(false);
   const [alertText, setAlertText] = useState("");
@@ -65,11 +66,10 @@ setAlertText("Enter Product Price");
           return
       }
     //console.log(imagePreview);
-    axios.post("/product/addProduct", {
-        ...formData,image:imagePreview
+    axios.put("/product/updateProduct", {
+        ...formData,image:imagePreview,id:product._id
     })
       .then((res)=>{
-          setIsProductFormVisible(false);
           setShowAlertForSubmission(true);
       })
       .catch((err) => {
@@ -82,20 +82,12 @@ const handleInputChange = (event) => {
   };
   return (<>
  <div>
-      {isProductFormVisible ? (
-          <div></div>
-      ) : (
-        <Button onClick={() => setIsProductFormVisible(true)}>Add Product</Button>
-      )}
-    </div>
- <div>
 {showAlertForSubmission && (
-        <Alert variant="success" dismissible onClose={handleCloseAlertForSubmission}>Product created! Reload the page to see changes</Alert>
+        <Alert variant="success" dismissible onClose={handleCloseAlertForSubmission}>Product updated!! Reload to See changes</Alert>
       )}
 {showAlert && (
         <Alert variant="danger" dismissible onClose={handleCloseAlert}>{alertText}</Alert>
       )}
-      {isProductFormVisible ? (
     <Form onSubmit={handleSubmit}>
 
       <Form.Group className="mb-3" controlId="productName">
@@ -127,12 +119,9 @@ const handleInputChange = (event) => {
           onChange={handleInputChange}/>
       </Form.Group>
       <Button variant="primary" type="submit">
-        Submit
+        Save Changes
       </Button>
     </Form>
-      ) : (
-        <div></div>
-      )}
     </div> 
         </>)
 }

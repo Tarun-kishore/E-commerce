@@ -3,19 +3,7 @@ const router = new express.Router();
 const auth = require("./../middlewares/auth");
 const User = require("../models/user");
 const Product = require("../models/products");
-
-router.post("/addProduct", auth, async (req, res) => {
-  try {
-    const product = new Product({ ...req.body, createdBy: req.user._id });
-    await product.save();
-
-    console.log(req.body.name, "added ");
-    res.status(201).send("product added");
-  } catch (e) {
-    console.log(e);
-    res.status(500).send(e);
-  }
-});
+const { findById } = require("../models/products");
 
 router.get("/myProducts", auth, async (req, res) => {
   const page = parseInt(req.query.page) || 1;
